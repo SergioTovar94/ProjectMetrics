@@ -12,8 +12,9 @@ Antes de comenzar, asegúrate de tener instalado:
 
 - **Python 3.10+** - [Descargar](https://www.python.org/downloads/)
 - **PostgreSQL 15+** - [Descargar](https://www.postgresql.org/download/)
+- **Node.js 18+** - [Descargar](https://nodejs.org/)
+- **Angular CLI 17+** - `npm install -g @angular/cli@17`
 - **Git** - [Descargar](https://git-scm.com/downloads)
-- **pip** (viene con Python)
 
 ## 3. Arquitectura y tecnologías
 
@@ -29,10 +30,12 @@ El proyecto será desarrollado a través de una arquitectura cliente servidor (b
 
 - Angular: Framework frontend
 - TypeScript: Tipado estático
+- Angular Material: Componentes UI
+- Chart.js: Gráficas
 
 ### Base de datos
 
-- PostgreSQL: Base de datos relacional
+- PostgreSQL 15+: Base de datos relacional
 
 ### Pruebas
 
@@ -132,9 +135,64 @@ DATABASE_URL=postgresql://postgres:tu_contraseña@localhost:5432/trycore_evm
 DATABASE_URL=postgresql://postgres@localhost:5433/trycore_evm
 ```
 
-## 4.5. Iniciar el servidor
+### Iniciar el backend
+
 ```
 uvicorn app.main:app --reload
 ```
 El servidor estará disponible en: http://localhost:8000
 
+API Docs (Swagger): http://localhost:8000/docs
+
+## 4.5. Configurar el frontend
+
+### Instalar dependencias
+
+```
+cd frontend
+npm install
+```
+
+### Iniciar el frontend
+
+```
+ng serve --open
+```
+
+El servidor estará disponible en: http://localhost:4200
+
+## 6. Estructura del Proyecto
+
+```
+ProjectMetrics/
+├── backend/
+│   ├── app/
+│   │   ├── core/              # Configuración central
+│   │   ├── models/            # SQLAlchemy models
+│   │   ├── schemas/           # Pydantic schemas
+│   │   ├── services/          # Lógica de negocio (EVM Calculator)
+│   │   ├── routers/           # Endpoints API
+│   │   └── main.py            # FastAPI app
+│   ├── scripts/
+│   │   └── init_db.sql        # Script de inicialización
+│   ├── tests/                 # Pruebas unitarias e integración
+│   ├── requirements.txt
+│   └── .env
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── core/          # Models y services
+│   │   │   └── components/    # Componentes Angular
+│   │   ├── environments/
+│   │   └── styles.css
+│   ├── angular.json
+│   └── package.json
+├── AI_PROCESS.md
+├── PROMPTS.md
+└── README.md
+```
+
+# Evaluador
+Este proyecto fue desarrollado como prueba técnica para Trycore Colombia.
+
+Fecha de entrega: Sábado 27 de junio 2026# 
