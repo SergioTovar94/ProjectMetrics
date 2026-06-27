@@ -1,32 +1,39 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivityService } from '../../core/services/activity.service';
 import { Activity } from '../../core/models/activity.model';
+import { ActivityFormComponent } from '../activity-form/activity-form.component';
 
 @Component({
   selector: 'app-activity-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './activity-table.component.html',
   styleUrls: ['./activity-table.component.css']
 })
 export class ActivityTableComponent implements OnInit, OnDestroy {
   @Input() projectId!: number;
+  @Output() dataChanged = new EventEmitter<void>();
 
   activities: Activity[] = [];
   loading = true;
   hasData = false;
   private subscription?: Subscription;
 
-  constructor(private activityService: ActivityService) {}
+  constructor(
+    private activityService: ActivityService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     if (this.projectId) {
       this.loadData();
     }
   }
-
   loadData(): void {
     this.loading = true;
     this.subscription = this.activityService.getActivitiesByProject(this.projectId).subscribe({
@@ -40,6 +47,39 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
         this.hasData = false;
       }
     });
+  }
+ editActivity(activity: Activity): void {
+    const dialogRef = this.dialog.open(ActivityFormComponent, {
+      width: '500px',
+      data: {
+        activity: activity,
+        projectId: this.projectId,
+        projects: []
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadData();
+        this.dataChanged.emit();
+      }
+    });
+  }
+
+  deleteActivity(activity: Activity): void {
+    if (confirm(`¿Estás seguro de eliminar la actividad "${activity.name}"?`)) {
+      this.activityService.deleteActivity(activity.id).subscribe({
+        next: () => {
+          this.snackBar.open('✅ Actividad eliminada exitosamente', 'Cerrar', { duration: 3000 });
+          this.loadData();
+          this.dataChanged.emit();
+        },
+        error: (error) => {
+          console.error('Error deleting activity:', error);
+          this.snackBar.open('❌ Error al eliminar la actividad', 'Cerrar', { duration: 3000 });
+        }
+      });
+    }
   }
 
   getStatusBadge(cpi: number, spi: number): string {
