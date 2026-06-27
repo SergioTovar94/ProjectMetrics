@@ -1,34 +1,37 @@
 # ===========================
 # Python
 # ===========================
-backend/.venv/
-backend/__pycache__/
-backend/.pytest_cache/
-backend/.ruff_cache/
-backend/.mypy_cache/
-backend/.coverage
-backend/.env
-backend/venv
+__pycache__/
+*.py[cod]
+*.pyo
+
+
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.env
 
 # ===========================
-# React / Node
+# Node / Frontend
 # ===========================
-
-frontend/node_modules/
-frontend/dist/
-frontend/.angular/
-frontend/coverage/
-frontend/out-tsc/
-frontend/tmp/
+node_modules/
+dist/
+build/
+coverage/
+.angular/
+out-tsc/
+tmp/
 
 npm-debug.log*
 yarn-error.log*
 
+.env
 
 # ===========================
 # IDEs
 # ===========================
-
 .vscode/
 .idea/
 .project
@@ -40,7 +43,6 @@ yarn-error.log*
 # ===========================
 # Misc
 # ===========================
-
 .sass-cache/
 .history/
 .DS_Store
