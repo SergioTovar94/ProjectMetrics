@@ -1,1 +1,18 @@
-<p>bar-chart works!</p>
+<!-- src/app/components/bar-chart/bar-chart.component.html -->
+<div class="chart-container">
+    <!-- Loading -->
+    <div *ngIf="loading" class="chart-loading">
+        <div class="spinner"></div>
+        <p>Cargando gráfica...</p>
+    </div>
+
+    <!-- Chart -->
+    <div *ngIf="!loading && hasData" class="chart-wrapper">
+        <canvas #chartCanvas></canvas>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !hasData" class="chart-empty">
+        <p>📊 No hay actividades para mostrar</p>
+    </div>
+</div>

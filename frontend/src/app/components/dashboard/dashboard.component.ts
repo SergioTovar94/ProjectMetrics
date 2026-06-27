@@ -7,6 +7,8 @@ import { StateService } from '../../core/services/state.service';
 import { ProjectService } from '../../core/services/project.service';
 import { StatusPillsComponent } from '../status-pills/status-pills.component';
 import { KpiCardsComponent } from '../kpi-cards/kpi-cards.component';
+import { BarChartComponent } from '../bar-chart/bar-chart.component';
+import { ActivityTableComponent } from '../activity-table/activity-table.component';
 
 
 @Component({
@@ -16,6 +18,8 @@ import { KpiCardsComponent } from '../kpi-cards/kpi-cards.component';
     CommonModule,
     StatusPillsComponent,
     KpiCardsComponent,
+    BarChartComponent,
+    ActivityTableComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
