@@ -1,0 +1,92 @@
+<!-- src/app/components/activity-form/activity-form.component.html -->
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+        <!-- Project Selector -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Proyecto</mat-label>
+            <mat-select formControlName="project_id" [disabled]="isEditMode">
+                <mat-option *ngFor="let project of projects" [value]="project.id">
+                    {{ project.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="activityForm.get('project_id')?.hasError('required')">
+                El proyecto es requerido
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Name -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre de la actividad</mat-label>
+            <input matInput formControlName="name" placeholder="Ej: Desarrollo Frontend">
+            <mat-error *ngIf="activityForm.get('name')?.hasError('required')">
+                El nombre es requerido
+            </mat-error>
+            <mat-error *ngIf="activityForm.get('name')?.hasError('minlength')">
+                El nombre debe tener al menos 3 caracteres
+            </mat-error>
+        </mat-form-field>
+
+        <!-- BAC -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>BAC (Budget at Completion)</mat-label>
+            <input matInput type="number" formControlName="bac" placeholder="Ej: 10000">
+            <span matTextPrefix>$ </span>
+            <mat-error *ngIf="activityForm.get('bac')?.hasError('required')">
+                El BAC es requerido
+            </mat-error>
+            <mat-error *ngIf="activityForm.get('bac')?.hasError('min')">
+                El BAC debe ser mayor a 0
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Planned Progress -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Progreso planificado (%)</mat-label>
+            <input matInput type="number" formControlName="planned_progress" placeholder="Ej: 0.50" step="0.01" min="0"
+                max="1">
+            <mat-error *ngIf="activityForm.get('planned_progress')?.hasError('required')">
+                El progreso planificado es requerido
+            </mat-error>
+            <mat-error
+                *ngIf="activityForm.get('planned_progress')?.hasError('min') || activityForm.get('planned_progress')?.hasError('max')">
+                El valor debe estar entre 0 y 1
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Actual Progress -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Progreso real completado (%)</mat-label>
+            <input matInput type="number" formControlName="actual_progress" placeholder="Ej: 0.40" step="0.01" min="0"
+                max="1">
+            <mat-error *ngIf="activityForm.get('actual_progress')?.hasError('required')">
+                El progreso real es requerido
+            </mat-error>
+            <mat-error
+                *ngIf="activityForm.get('actual_progress')?.hasError('min') || activityForm.get('actual_progress')?.hasError('max')">
+                El valor debe estar entre 0 y 1
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Actual Cost (AC) -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Costo real (AC)</mat-label>
+            <input matInput type="number" formControlName="ac" placeholder="Ej: 6000">
+            <span matTextPrefix>$ </span>
+            <mat-error *ngIf="activityForm.get('ac')?.hasError('required')">
+                El costo real es requerido
+            </mat-error>
+            <mat-error *ngIf="activityForm.get('ac')?.hasError('min')">
+                El costo debe ser mayor o igual a 0
+            </mat-error>
+        </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="activityForm.invalid || submitting">
+            {{ submitting ? 'Guardando...' : submitLabel }}
+        </button>
+    </mat-dialog-actions>
+</form>

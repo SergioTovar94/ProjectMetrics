@@ -1,0 +1,63 @@
+<!-- src/app/components/dashboard/dashboard.component.html -->
+<div class="dash">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div>
+            <div class="project-label">Proyecto activo</div>
+            <h1>{{ activeProject?.name || 'Selecciona un proyecto' }}</h1>
+        </div>
+        <div class="top-bar-actions">
+            <!-- Project Selector -->
+            <select *ngIf="projects.length > 0" class="project-selector"
+                (change)="onProjectSelected(projects[+$any($event.target).value])">
+                <option *ngFor="let project of projects; let i = index" [value]="i">
+                    {{ project.name }}
+                </option>
+            </select>
+
+            <!-- ✅ Botones al lado del selector -->
+            <button class="btn-secondary" (click)="openProjectForm()">
+                + Nuevo proyecto
+            </button>
+            <button class="btn-primary" (click)="openActivityForm()">
+                + Nueva actividad
+            </button>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-banner">
+        ⚠️ {{ error }}
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando datos...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <ng-container *ngIf="!loading && !error && activeProject">
+        <!-- Status Pills -->
+        <app-status-pills [projectId]="activeProject.id"></app-status-pills>
+
+        <!-- KPI Cards -->
+        <app-kpi-cards [projectId]="activeProject.id"></app-kpi-cards>
+
+        <!-- Bar Chart -->
+        <div class="section-title">PV vs EV vs AC por actividad</div>
+        <app-bar-chart [projectId]="activeProject.id"></app-bar-chart>
+
+        <!-- Activity Table -->
+        <div class="section-title">Detalle de actividades</div>
+        <app-activity-table [projectId]="activeProject.id" (dataChanged)="loadProjects()"></app-activity-table>
+    </ng-container>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && projects.length === 0" class="empty-state">
+        <p>No hay proyectos creados. Crea uno para comenzar.</p>
+        <button class="btn-primary" style="margin-top: 1rem;" (click)="openProjectForm()">
+            + Crear proyecto
+        </button>
+    </div>
+</div>
