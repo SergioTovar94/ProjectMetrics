@@ -322,3 +322,22 @@ Actualizar main.py para incluir los routers
 
 ¿Me ayudas a generar el código para esto?
 ```
+
+## Claude: CONFIGURACIÓN DE CORS
+
+```
+El frontend (Angular en localhost:4200) no puede consumir la API porque CORS bloquea las peticiones. ¿Cómo configuro CORS en FastAPI para permitir peticiones desde Angular en desarrollo?
+```
+
+## Claude: COMPONENTE DE GRÁFICA DE BARRAS
+```
+Necesito un componente Angular para mostrar una gráfica de barras que compare PV, EV y AC por actividad. Debe usar Chart.js y ser standalone.
+
+Requisitos:
+
+- Recibir projectId como Input
+- Obtener actividades del servicio ActivityService
+- Renderizar barras con colores: PV , EV , AC 
+- Mostrar leyenda y etiquetas de actividad
+- Manejar estados de carga y vacío
+```
