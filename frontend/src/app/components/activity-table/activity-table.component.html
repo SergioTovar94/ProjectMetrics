@@ -1,0 +1,70 @@
+<!-- src/app/components/activity-table/activity-table.component.html -->
+<div class="table-container">
+    <!-- Loading -->
+    <div *ngIf="loading" class="table-loading">
+        <div class="spinner"></div>
+        <p>Cargando actividades...</p>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!loading && hasData" class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Actividad</th>
+                    <th>BAC</th>
+                    <th>PV</th>
+                    <th>EV</th>
+                    <th>AC</th>
+                    <th>CV</th>
+                    <th>SV</th>
+                    <th>CPI</th>
+                    <th>SPI</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let activity of activities">
+                    <td class="activity-name">{{ activity.name }}</td>
+                    <td>{{ formatCurrency(activity.bac) }}</td>
+                    <td>{{ formatCurrency(activity.evm?.pv || 0) }}</td>
+                    <td>{{ formatCurrency(activity.evm?.ev || 0) }}</td>
+                    <td>{{ formatCurrency(activity.ac || activity.ac || 0) }}</td>
+                    <td [ngClass]="getCVClass(activity.evm?.cv || 0)">
+                        {{ formatCurrency(activity.evm?.cv || 0) }}
+                    </td>
+                    <td [ngClass]="getSVClass(activity.evm?.sv || 0)">
+                        {{ formatCurrency(activity.evm?.sv || 0) }}
+                    </td>
+                    <td [ngClass]="getCPIClass(activity.evm?.cpi || 0)">
+                        {{ formatNumber(activity.evm?.cpi || 0) }}
+                    </td>
+                    <td [ngClass]="getSPIClass(activity.evm?.spi || 0)">
+                        {{ formatNumber(activity.evm?.spi || 0) }}
+                    </td>
+                    <td>
+                        <span class="badge" [ngClass]="getStatusBadge(activity.evm?.cpi || 0, activity.evm?.spi || 0)">
+                            {{ getStatusText(activity.evm?.cpi || 0, activity.evm?.spi || 0) }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-edit" title="Editar actividad">
+                            ✏️
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !hasData" class="table-empty">
+        <p>📋 No hay actividades para este proyecto</p>
+    </div>
+
+    <!-- Add Button -->
+    <div class="add-button-container">
+        <button class="btn-add">+ Agregar actividad</button>
+    </div>
+</div>

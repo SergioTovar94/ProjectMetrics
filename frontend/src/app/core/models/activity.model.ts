@@ -7,7 +7,7 @@ export interface Activity {
   bac: number;
   planned_progress: number;
   actual_progress: number;
-  actual_cost: number;
+  ac: number;
   created_at: Date;
   updated_at?: Date;
   evm?: EVMIndicators;

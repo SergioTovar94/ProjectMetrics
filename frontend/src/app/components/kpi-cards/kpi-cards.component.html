@@ -1,0 +1,36 @@
+<div class="kpi-grid" *ngIf="!loading; else loadingState">
+    <div class="kpi">
+        <div class="kpi-label">BAC total</div>
+        <div class="kpi-val">${{ totalBAC.toLocaleString() }}</div>
+        <div class="kpi-sub">presupuesto planeado</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">EV acumulado</div>
+        <div class="kpi-val">${{ totalEV.toLocaleString() }}</div>
+        <div class="kpi-sub">valor real completado</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">CPI</div>
+        <div class="kpi-val" [ngClass]="getStatusClass(cpi, 'cpi')">
+            {{ cpi.toFixed(2) }}
+        </div>
+        <div class="kpi-sub">{{ getEACLabel() }}</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">SPI</div>
+        <div class="kpi-val" [ngClass]="getStatusClass(spi, 'spi')">
+            {{ spi.toFixed(2) }}
+        </div>
+        <div class="kpi-sub">{{ getVACLabel() }}</div>
+    </div>
+</div>
+
+<ng-template #loadingState>
+    <div class="kpi-grid">
+        <div class="kpi" *ngFor="let i of [1,2,3,4]">
+            <div class="kpi-label">Cargando...</div>
+            <div class="kpi-val">—</div>
+            <div class="kpi-sub">...</div>
+        </div>
+    </div>
+</ng-template>
