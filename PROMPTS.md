@@ -286,3 +286,39 @@ ProjectUpdate: ambos opcionales
 ProjectResponse: con actividades + EVM consolidado
 ProjectSimpleResponse: solo nombre
 ```
+
+## Claude: Endpoints
+
+```
+Proyecta los endpoints para Projects y Activities.
+
+Temer em cuenta
+
+1. Para Projects /projects/:
+   - crear proyecto (name, description es opcional)
+   - listar todos (usando ProjectSimpleResponse, sin actividades)
+   - obtener po {id} - detalle con actividades y EVM consolidado (ProjectResponse)
+   - actualizar por {id}
+   - eliminar por {id}
+
+2. Para Activities:
+   - Crear actividad (project_id, name, bac, planned_progress, actual_progress, actual_cost)
+   - listar actividades de un proyecto con EVM individual
+   - obtener por id
+   - actualizar por {id}
+   - eliminar por {id}
+
+3. A tener en cuenta:
+   - Validar que no haya nombres duplicados (proyecto con mismo nombre o actividad con mismo nombre en el mismo proyecto)
+   - Manejar errores 404 y 400 con mensajes claros
+
+4. Librerías:
+   - FastAPI con APIRouter
+   - SQLAlchemy para consultas
+   - Los schemas que ya creamos
+   - El EVMCalculator para calcular indicadores
+
+Actualizar main.py para incluir los routers
+
+¿Me ayudas a generar el código para esto?
+```

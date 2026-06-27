@@ -1,6 +1,7 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Numeric, String
+from sqlalchemy import DateTime, ForeignKey, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
@@ -19,24 +20,40 @@ class Activity(Base):
         nullable=False,
     )
 
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
 
-    budget_at_completion: Mapped[float] = mapped_column(
+    bac: Mapped[float] = mapped_column(
         Numeric(12, 2),
         nullable=False,
     )
 
     planned_progress: Mapped[float] = mapped_column(
+        Numeric(3, 2),
         nullable=False,
     )
 
     actual_progress: Mapped[float] = mapped_column(
+        Numeric(3, 2),
         nullable=False,
     )
 
     actual_cost: Mapped[float] = mapped_column(
         Numeric(12, 2),
         nullable=False,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        server_default=func.now(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        server_default=func.now(),
+        onupdate=func.now(),
     )
 
     project: Mapped["Project"] = relationship(

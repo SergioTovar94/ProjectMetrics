@@ -177,7 +177,7 @@ class TestEVMCalculator:
         assert len(result.activities) == 3
 
         # Verificar sumatorias
-        assert result.total_bac == 40000.0  # 10000 + 15000 + 15000
+        assert result.bac == 40000.0  # 10000 + 15000 + 15000
         # PV: 5000 + 9000 + 9000 = 23000
         assert result.total_pv == 23000.0
         # EV: 4000 + 10500 + 10500 = 25000
@@ -203,10 +203,10 @@ class TestEVMCalculator:
             activities_data=[],
         )
 
-        assert result.total_bac == 0.0
-        assert result.total_pv == 0.0
-        assert result.total_ev == 0.0
-        assert result.total_ac == 0.0
+        assert result.bac == 0.0
+        assert result.pv == 0.0
+        assert result.ev == 0.0
+        assert result.ac == 0.0
         assert result.cpi == 1.0
         assert result.spi == 1.0
         assert result.cost_status == "sin actividades"
@@ -232,10 +232,10 @@ class TestEVMCalculator:
             activities_data=activities_data,
         )
 
-        assert result.total_bac == 10000.0
-        assert result.total_pv == 5000.0
-        assert result.total_ev == 4000.0
-        assert result.total_ac == 6000.0
+        assert result.bac == 10000.0
+        assert result.pv == 5000.0
+        assert result.ev == 4000.0
+        assert result.ac == 6000.0
         assert result.cpi == 0.67
         assert result.spi == 0.8
         assert result.cost_status == "sobre presupuesto"
@@ -261,10 +261,10 @@ class TestEVMCalculator:
             activities_data=activities_data,
         )
 
-        assert result.total_bac == 0.0
-        assert result.total_pv == 0.0
-        assert result.total_ev == 0.0
-        assert result.total_ac == 0.0
+        assert result.bac == 0.0
+        assert result.pv == 0.0
+        assert result.ev == 0.0
+        assert result.ac == 0.0
         assert result.cpi == 1.0
         assert result.spi == 1.0
 
@@ -358,4 +358,4 @@ def test_with_fixture(sample_activities):
     )
 
     assert len(result.activities) == 2
-    assert result.total_bac == 17000.0  # 5000 + 12000
+    assert result.bac == 17000.0  # 5000 + 12000

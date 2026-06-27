@@ -34,10 +34,10 @@ class ProjectEVM:
 
     project_id: int
     project_name: str
-    total_bac: float
-    total_pv: float
-    total_ev: float
-    total_ac: float
+    bac: float
+    pv: float
+    ev: float
+    ac: float
     cv: float
     sv: float
     cpi: float
@@ -151,10 +151,10 @@ class EVMCalculator:
             return ProjectEVM(
                 project_id=project_id,
                 project_name=project_name,
-                total_bac=0.0,
-                total_pv=0.0,
-                total_ev=0.0,
-                total_ac=0.0,
+                bac=0.0,
+                pv=0.0,
+                ev=0.0,
+                ac=0.0,
                 cv=0.0,
                 sv=0.0,
                 cpi=1.0,
@@ -168,10 +168,10 @@ class EVMCalculator:
 
         # Calcular cada actividad y acumular
         activity_results = []
-        total_bac = 0.0
-        total_pv = 0.0
-        total_ev = 0.0
-        total_ac = 0.0
+        bac = 0.0
+        pv = 0.0
+        ev = 0.0
+        ac = 0.0
 
         for activity in activities_data:
             result = EVMCalculator.calculate_activity_evm(
@@ -187,23 +187,21 @@ class EVMCalculator:
                 actual_cost=EVMCalculator._to_float(activity.get("actual_cost")),
             )
             activity_results.append(result)
-            total_bac += result.bac
-            total_pv += result.pv
-            total_ev += result.ev
-            total_ac += result.actual_cost
+            bac += result.bac
+            pv += result.pv
+            ev += result.ev
+            ac += result.actual_cost
 
         # Calcular indicadores del proyecto (reusa la misma lógica)
-        indicators = EVMCalculator._calculate_indicators(
-            total_bac, total_pv, total_ev, total_ac
-        )
+        indicators = EVMCalculator._calculate_indicators(bac, pv, ev, ac)
 
         return ProjectEVM(
             project_id=project_id,
             project_name=project_name,
-            total_bac=round(total_bac, 2),
-            total_pv=round(total_pv, 2),
-            total_ev=round(total_ev, 2),
-            total_ac=round(total_ac, 2),
+            bac=round(bac, 2),
+            pv=round(pv, 2),
+            ev=round(ev, 2),
+            ac=round(ac, 2),
             cv=round(indicators["cv"], 2),
             sv=round(indicators["sv"], 2),
             cpi=round(indicators["cpi"], 2),
