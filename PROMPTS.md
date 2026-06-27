@@ -149,9 +149,117 @@ RESPONDE CON LA PLANIFICACIÓN (FASE 1) EN TU PRÓXIMO MENSAJE.
 
 ```
 
-### Deepseek: PROMPT DE CONSTRUCCIÓN DE SERVICIO VALOR GANADO
+## Claude PROMPT GENERADOR DE SCRIPT SQL (POSTGRESQL ESTRUCTURADO)
+
+```
+Tu tarea es generar un script SQL completo listo para ejecución que inicialice una base de datos relacional para un sistema de gestión de proyectos.
+
+1. Reglas generales del script
+Debe ser compatible con PostgreSQL.
+Debe incluir eliminación de tablas existentes usando DROP TABLE IF EXISTS ... CASCADE.
+Debe incluir creación de tablas con relaciones correctas.
+Debe incluir claves primarias y foráneas correctamente definidas.
+Debe usar tipos de datos apropiados.
+Debe incluir datos de ejemplo (seed data).
+Debe finalizar con consultas de verificación (SELECT).
+2. Modelo de datos obligatorio
+
+Debes crear exactamente estas dos tablas:
+
+Tabla: projects
+
+Descripción: representa proyectos del sistema.
+
+Columnas obligatorias:
+
+id: SERIAL PRIMARY KEY
+name: VARCHAR(255) NOT NULL
+description: TEXT NULL
+created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+Relaciones: Es tabla padre de activities.
+
+Tabla: activities
+
+Descripción: representa actividades dentro de un proyecto.
+
+Columnas obligatorias:
+
+id: SERIAL PRIMARY KEY
+project_id: INTEGER NOT NULL (FK a projects.id)
+name: VARCHAR(255) NOT NULL
+bac: NUMERIC(12,2) NOT NULL (Budget at Completion)
+planned_progress: NUMERIC(5,2) DEFAULT 0.00
+actual_progress: NUMERIC(5,2) DEFAULT 0.00
+actual_cost: NUMERIC(12,2) DEFAULT 0.00
+created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+updated_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+Relaciones:
+
+activities.project_id debe ser clave foránea que referencia projects.id
+ON DELETE CASCADE debe estar habilitado
+
+3. Datos de ejemplo obligatorios
+
+Debes insertar:
+
+projects
+Exactamente 1 registro de proyecto.
+activities
+4 registros en total.
+Todas las actividades deben estar asociadas al proyecto existente.
+
+4. Reglas
+No puede existir una actividad sin proyecto asociado.
+Los valores de progreso deben estar entre 0 y 1(estándar, mantenlo consistente).
+
+5. Selects
+
+Al final del script debes incluir:
+
+Conteo total de actividades.
+Un SELECT simple que muestre la relación entre proyecto y actividad.
+6. Restricciones de salida
+Solo devuelve el script SQL.
+No agregues explicaciones.
+No uses markdown.
+No incluyas texto adicional antes o después.
+Debe ser un archivo .sql válido ejecutable directamente.
+```
+
+El sql generado se encuentra en el backend/scripts
+
+### Claude: PROMPT DE CONSTRUCCIÓN DE SERVICIO VALOR GANADO
 
 ```
 Con base en las especificaciones que hemos abordado en los casos pasados implementar un módulo de servicio en Python que calcule indicadores EVM bajo las siguientes especificaciones: 
-1. El componente debe llamarse
+1. Construir componente llamado EVMCalculator que permita
+Calcular las métricas EVM por actividad
+Calcular las métricas consolidadas por proyecto
+2. Reglas
+Usar dataclases para los modelos de salida
+Sin librerías externas
+Codigo limpio
+No agregues emojis ni docstrings largos
+3. ActivityEVM debe contener
+
+Los datos base de la actividad
+activity_id activity_name bac planned_progress actual_progress actual_cost
+
+Y los indicadores
+
+pv ev cv sv cpi spi eac vac
+
+4. ProjectEVM debe contener
+
+Los datos consolidados del proyecto
+project_id project_name total_bac total_pv total_ev total_ac
+Debe incluir la lista de ActivityEVM calculadas
+El servicio debe tener dos metodos
+calculate_activity_evm()
+
+calculate_project_evm()
 ```
+
+Luego de revisar la respuesta se solificó el código con ajuste de reglas de negocio, interpretaciones para CPI y SPI.

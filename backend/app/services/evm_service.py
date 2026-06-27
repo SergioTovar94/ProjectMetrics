@@ -25,8 +25,8 @@ class ActivityEVM:
     vac: float  # Variance at Completion
 
     # Interpretaciones
-    cost_status: str  # "bajo presupuesto", "sobre presupuesto", "en presupuesto"
-    schedule_status: str  # "adelantado", "atrasado", "en cronograma"
+    cost_status: str
+    schedule_status: str
 
 
 @dataclass
@@ -66,6 +66,42 @@ class EVMCalculator:
     """
 
     @staticmethod
+    def _to_float(value: Any, default: float = 0.0) -> float:
+        """Convierte un valor a float, con default seguro"""
+        return float(value) if value else default
+
+    @staticmethod
+    def _calculate_indicators(
+        bac: float, pv: float, ev: float, actual_cost: float
+    ) -> dict[str, float]:
+        """
+        Calcula los indicadores derivados: CV, SV, CPI, SPI, EAC, VAC
+        """
+        cv = ev - actual_cost
+        sv = ev - pv
+
+        # CPI (con manejo de división por cero)
+        cpi = ev / actual_cost if actual_cost > 0 else 1.0
+
+        # SPI (con manejo de división por cero)
+        spi = ev / pv if pv > 0 else 1.0
+
+        # EAC (con manejo de división por cero)
+        eac = bac / cpi if cpi > 0 else bac
+
+        # VAC
+        vac = bac - eac
+
+        return {
+            "cv": cv,
+            "sv": sv,
+            "cpi": cpi,
+            "spi": spi,
+            "eac": eac,
+            "vac": vac,
+        }
+
+    @staticmethod
     def calculate_activity_evm(
         activity_id: int,
         name: str,
@@ -74,53 +110,19 @@ class EVMCalculator:
         actual_progress: float,
         actual_cost: float,
     ) -> ActivityEVM:
-        """
-        Calcula todos los indicadores EVM para una actividad individual
-        """
+        """Calcula todos los indicadores EVM para una actividad individual"""
         # Validar entradas
-        bac = float(bac) if bac else 0.0
-        planned_progress = float(planned_progress) if planned_progress else 0.0
-        actual_progress = float(actual_progress) if actual_progress else 0.0
-        actual_cost = float(actual_cost) if actual_cost else 0.0
+        bac = EVMCalculator._to_float(bac)
+        planned_progress = EVMCalculator._to_float(planned_progress)
+        actual_progress = EVMCalculator._to_float(actual_progress)
+        actual_cost = EVMCalculator._to_float(actual_cost)
 
-        # 1. PV (Planned Value)
+        # PV y EV (fórmulas base)
         pv = planned_progress * bac
-
-        # 2. EV (Earned Value)
         ev = actual_progress * bac
 
-        # 3. CV (Cost Variance)
-        cv = ev - actual_cost
-
-        # 4. SV (Schedule Variance)
-        sv = ev - pv
-
-        # 5. CPI (Cost Performance Index)
-        if actual_cost > 0:
-            cpi = ev / actual_cost
-        else:
-            # Si AC = 0, asumimos CPI = 1.0 (sin costo)
-            cpi = 1.0
-
-        # 6. SPI (Schedule Performance Index)
-        if pv > 0:
-            spi = ev / pv
-        else:
-            # Si PV = 0, asumimos SPI = 1.0 (sin planificación)
-            spi = 1.0
-
-        # 7. EAC (Estimate at Completion)
-        if cpi > 0:
-            eac = bac / cpi
-        else:
-            eac = bac  # Si CPI es 0, usar BAC
-
-        # 8. VAC (Variance at Completion)
-        vac = bac - eac
-
-        # Interpretaciones
-        cost_status = EVMCalculator._interpret_cpi(cpi)
-        schedule_status = EVMCalculator._interpret_spi(spi)
+        # Indicadores derivados
+        indicators = EVMCalculator._calculate_indicators(bac, pv, ev, actual_cost)
 
         return ActivityEVM(
             activity_id=activity_id,
@@ -131,26 +133,22 @@ class EVMCalculator:
             actual_cost=round(actual_cost, 2),
             pv=round(pv, 2),
             ev=round(ev, 2),
-            cv=round(cv, 2),
-            sv=round(sv, 2),
-            cpi=round(cpi, 2),
-            spi=round(spi, 2),
-            eac=round(eac, 2),
-            vac=round(vac, 2),
-            cost_status=cost_status,
-            schedule_status=schedule_status,
+            cv=round(indicators["cv"], 2),
+            sv=round(indicators["sv"], 2),
+            cpi=round(indicators["cpi"], 2),
+            spi=round(indicators["spi"], 2),
+            eac=round(indicators["eac"], 2),
+            vac=round(indicators["vac"], 2),
+            cost_status=EVMCalculator._interpret_cpi(indicators["cpi"]),
+            schedule_status=EVMCalculator._interpret_spi(indicators["spi"]),
         )
 
     @staticmethod
     def calculate_project_evm(
         project_id: int, project_name: str, activities_data: list[dict[str, Any]]
     ) -> ProjectEVM:
-        """
-        Calcula indicadores EVM consolidados para un proyecto
-        Suma todos los valores base y recalcula las fórmulas
-        """
+        """Calcula indicadores EVM consolidados para un proyecto"""
         if not activities_data:
-            # Proyecto sin actividades
             return ProjectEVM(
                 project_id=project_id,
                 project_name=project_name,
@@ -169,51 +167,36 @@ class EVMCalculator:
                 activities=[],
             )
 
-        # Sumar valores base de todas las actividades
+        # Calcular cada actividad y acumular
+        activity_results = []
         total_bac = 0.0
         total_pv = 0.0
         total_ev = 0.0
         total_ac = 0.0
-        activity_results = []
 
         for activity in activities_data:
-            # Calcular EVM individual
             result = EVMCalculator.calculate_activity_evm(
-                activity_id=activity.get("id", 0),
+                activity_id=EVMCalculator._to_float(activity.get("id", 0), 0),
                 name=activity.get("name", ""),
-                bac=activity.get("bac", 0.0),
-                planned_progress=activity.get("planned_progress", 0.0),
-                actual_progress=activity.get("actual_progress", 0.0),
-                actual_cost=activity.get("actual_cost", 0.0),
+                bac=EVMCalculator._to_float(activity.get("bac")),
+                planned_progress=EVMCalculator._to_float(
+                    activity.get("planned_progress")
+                ),
+                actual_progress=EVMCalculator._to_float(
+                    activity.get("actual_progress")
+                ),
+                actual_cost=EVMCalculator._to_float(activity.get("actual_cost")),
             )
             activity_results.append(result)
-
-            # Acumular para proyecto
             total_bac += result.bac
             total_pv += result.pv
             total_ev += result.ev
             total_ac += result.actual_cost
 
-        # Calcular indicadores del proyecto
-        cv = total_ev - total_ac
-        sv = total_ev - total_pv
-
-        if total_ac > 0:
-            cpi = total_ev / total_ac
-        else:
-            cpi = 1.0
-
-        if total_pv > 0:
-            spi = total_ev / total_pv
-        else:
-            spi = 1.0
-
-        if cpi > 0:
-            eac = total_bac / cpi
-        else:
-            eac = total_bac
-
-        vac = total_bac - eac
+        # Calcular indicadores del proyecto (reusa la misma lógica)
+        indicators = EVMCalculator._calculate_indicators(
+            total_bac, total_pv, total_ev, total_ac
+        )
 
         return ProjectEVM(
             project_id=project_id,
@@ -222,14 +205,14 @@ class EVMCalculator:
             total_pv=round(total_pv, 2),
             total_ev=round(total_ev, 2),
             total_ac=round(total_ac, 2),
-            cv=round(cv, 2),
-            sv=round(sv, 2),
-            cpi=round(cpi, 2),
-            spi=round(spi, 2),
-            eac=round(eac, 2),
-            vac=round(vac, 2),
-            cost_status=EVMCalculator._interpret_cpi(cpi),
-            schedule_status=EVMCalculator._interpret_spi(spi),
+            cv=round(indicators["cv"], 2),
+            sv=round(indicators["sv"], 2),
+            cpi=round(indicators["cpi"], 2),
+            spi=round(indicators["spi"], 2),
+            eac=round(indicators["eac"], 2),
+            vac=round(indicators["vac"], 2),
+            cost_status=EVMCalculator._interpret_cpi(indicators["cpi"]),
+            schedule_status=EVMCalculator._interpret_spi(indicators["spi"]),
             activities=activity_results,
         )
 
@@ -238,17 +221,15 @@ class EVMCalculator:
         """Interpreta el CPI"""
         if cpi > 1.0:
             return "bajo presupuesto"
-        elif cpi < 1.0:
+        if cpi < 1.0:
             return "sobre presupuesto"
-        else:
-            return "en presupuesto"
+        return "en presupuesto"
 
     @staticmethod
     def _interpret_spi(spi: float) -> str:
         """Interpreta el SPI"""
         if spi > 1.0:
             return "adelantado"
-        elif spi < 1.0:
+        if spi < 1.0:
             return "atrasado"
-        else:
-            return "en cronograma"
+        return "en cronograma"
