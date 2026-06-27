@@ -23,7 +23,7 @@ class ActivityResponse(BaseModel):
     bac: float
     planned_progress: float
     actual_progress: float
-    actual_cost: float
+    ac: float
     created_at: datetime
     updated_at: datetime | None = None
 

@@ -1,5 +1,6 @@
 import pytest
-from app.services.evm_service import EVMCalculator, ActivityEVM, ProjectEVM
+
+from app.services.evm_service import ActivityEVM, EVMCalculator, ProjectEVM
 
 
 class TestEVMCalculator:
@@ -13,7 +14,7 @@ class TestEVMCalculator:
             bac=10000.0,
             planned_progress=0.50,
             actual_progress=0.40,
-            actual_cost=6000.0,
+            ac=6000.0,
         )
 
         assert isinstance(result, ActivityEVM)
@@ -42,7 +43,7 @@ class TestEVMCalculator:
             bac=15000.0,
             planned_progress=0.60,
             actual_progress=0.70,
-            actual_cost=9000.0,
+            ac=9000.0,
         )
 
         assert result.ev == 10500.0
@@ -51,7 +52,7 @@ class TestEVMCalculator:
         assert result.spi == 1.17
         assert result.schedule_status == "adelantado"
 
-    def test_calculate_activity_evm_actual_cost_zero(self):
+    def test_calculate_activity_evm_ac_zero(self):
         """Edge case: AC = 0 (división por cero en CPI)"""
         result = EVMCalculator.calculate_activity_evm(
             activity_id=3,
@@ -59,7 +60,7 @@ class TestEVMCalculator:
             bac=5000.0,
             planned_progress=0.50,
             actual_progress=0.50,
-            actual_cost=0.0,
+            ac=0.0,
         )
 
         assert result.pv == 2500.0
@@ -76,7 +77,7 @@ class TestEVMCalculator:
             bac=5000.0,
             planned_progress=0.0,
             actual_progress=0.50,
-            actual_cost=2000.0,
+            ac=2000.0,
         )
 
         assert result.pv == 0.0
@@ -91,7 +92,7 @@ class TestEVMCalculator:
             bac=0.0,
             planned_progress=0.50,
             actual_progress=0.50,
-            actual_cost=1000.0,
+            ac=1000.0,
         )
 
         assert result.bac == 0.0
@@ -108,7 +109,7 @@ class TestEVMCalculator:
             bac=10000.0,
             planned_progress=0.0,
             actual_progress=0.0,
-            actual_cost=0.0,
+            ac=0.0,
         )
 
         assert result.pv == 0.0
@@ -124,7 +125,7 @@ class TestEVMCalculator:
             bac=10000.0,
             planned_progress=1.0,
             actual_progress=1.0,
-            actual_cost=9500.0,
+            ac=9500.0,
         )
 
         assert result.pv == 10000.0
@@ -145,7 +146,7 @@ class TestEVMCalculator:
                 "bac": 10000.0,
                 "planned_progress": 0.50,
                 "actual_progress": 0.40,
-                "actual_cost": 6000.0,
+                "ac": 6000.0,
             },
             {
                 "id": 2,
@@ -153,7 +154,7 @@ class TestEVMCalculator:
                 "bac": 15000.0,
                 "planned_progress": 0.60,
                 "actual_progress": 0.70,
-                "actual_cost": 9000.0,
+                "ac": 9000.0,
             },
             {
                 "id": 3,
@@ -161,7 +162,7 @@ class TestEVMCalculator:
                 "bac": 15000.0,
                 "planned_progress": 0.60,
                 "actual_progress": 0.70,
-                "actual_cost": 9000.0,
+                "ac": 9000.0,
             },
         ]
 
@@ -179,11 +180,11 @@ class TestEVMCalculator:
         # Verificar sumatorias
         assert result.bac == 40000.0  # 10000 + 15000 + 15000
         # PV: 5000 + 9000 + 9000 = 23000
-        assert result.total_pv == 23000.0
+        assert result.pv == 23000.0
         # EV: 4000 + 10500 + 10500 = 25000
-        assert result.total_ev == 25000.0
+        assert result.ev == 25000.0
         # AC: 6000 + 9000 + 9000 = 24000
-        assert result.total_ac == 24000.0
+        assert result.ac == 24000.0
 
         # Verificar indicadores del proyecto
         assert result.cv == 1000.0  # 25000 - 24000
@@ -222,7 +223,7 @@ class TestEVMCalculator:
                 "bac": 10000.0,
                 "planned_progress": 0.50,
                 "actual_progress": 0.40,
-                "actual_cost": 6000.0,
+                "ac": 6000.0,
             }
         ]
 
@@ -251,7 +252,7 @@ class TestEVMCalculator:
                 "bac": 0.0,
                 "planned_progress": 0.0,
                 "actual_progress": 0.0,
-                "actual_cost": 0.0,
+                "ac": 0.0,
             }
         ]
 
@@ -294,7 +295,7 @@ class TestEVMCalculator:
             bac=1000.0,
             planned_progress=0.333,
             actual_progress=0.666,
-            actual_cost=500.0,
+            ac=500.0,
         )
 
         # Verificar que todos los valores tienen 2 decimales
@@ -312,7 +313,7 @@ class TestEVMCalculator:
                 "bac": 1000.0,
                 "planned_progress": 0.333,
                 "actual_progress": 0.666,
-                "actual_cost": 500.0,
+                "ac": 500.0,
             }
         ]
 
@@ -336,7 +337,7 @@ def sample_activities():
             "bac": 5000.0,
             "planned_progress": 0.80,
             "actual_progress": 0.60,
-            "actual_cost": 4500.0,
+            "ac": 4500.0,
         },
         {
             "id": 2,
@@ -344,7 +345,7 @@ def sample_activities():
             "bac": 12000.0,
             "planned_progress": 0.50,
             "actual_progress": 0.40,
-            "actual_cost": 7000.0,
+            "ac": 7000.0,
         },
     ]
 

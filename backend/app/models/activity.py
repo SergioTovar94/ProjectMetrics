@@ -40,7 +40,7 @@ class Activity(Base):
         nullable=False,
     )
 
-    actual_cost: Mapped[float] = mapped_column(
+    ac: Mapped[float] = mapped_column(
         Numeric(12, 2),
         nullable=False,
     )

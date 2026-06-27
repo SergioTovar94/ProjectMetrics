@@ -13,7 +13,7 @@ def build_activity_response(activity: Activity) -> ActivityResponse:
         bac=float(activity.bac),
         planned_progress=float(activity.planned_progress),
         actual_progress=float(activity.actual_progress),
-        actual_cost=float(activity.actual_cost),
+        ac=float(activity.ac),
     )
 
     return ActivityResponse(
@@ -23,12 +23,14 @@ def build_activity_response(activity: Activity) -> ActivityResponse:
         bac=float(activity.bac),
         planned_progress=float(activity.planned_progress),
         actual_progress=float(activity.actual_progress),
-        actual_cost=float(activity.actual_cost),
+        ac=float(activity.ac),
         created_at=activity.created_at,
         updated_at=activity.updated_at,
         evm=EVMIndicators(
+            bac=evm.bac,
             pv=evm.pv,
             ev=evm.ev,
+            ac=evm.ac,
             cv=evm.cv,
             sv=evm.sv,
             cpi=evm.cpi,
@@ -49,7 +51,7 @@ def build_project_response(project: Project) -> ProjectResponse:
             "bac": float(act.bac),
             "planned_progress": float(act.planned_progress),
             "actual_progress": float(act.actual_progress),
-            "actual_cost": float(act.actual_cost),
+            "ac": float(act.ac),
         }
         for act in project.activities
     ]

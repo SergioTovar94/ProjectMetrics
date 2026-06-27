@@ -15,4 +15,4 @@ class ActivityUpdate(BaseModel):
     bac: float | None = Field(None, gt=0)
     planned_progress: float | None = Field(None, ge=0.0, le=1.0)
     actual_progress: float | None = Field(None, ge=0.0, le=1.0)
-    actual_cost: float | None = Field(None, ge=0.0)
+    ac: float | None = Field(None, ge=0.0)

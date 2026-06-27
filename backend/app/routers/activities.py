@@ -54,7 +54,7 @@ def create_activity(activity_data: ActivityCreate, db: Session = Depends(get_db)
         bac=activity_data.bac,
         planned_progress=activity_data.planned_progress,
         actual_progress=activity_data.actual_progress,
-        actual_cost=activity_data.actual_cost,
+        ac=activity_data.ac,
     )
     db.add(new_activity)
     db.commit()
@@ -146,8 +146,8 @@ def update_activity(
         activity.planned_progress = activity_data.planned_progress
     if activity_data.actual_progress is not None:
         activity.actual_progress = activity_data.actual_progress
-    if activity_data.actual_cost is not None:
-        activity.actual_cost = activity_data.actual_cost
+    if activity_data.ac is not None:
+        activity.ac = activity_data.ac
 
     db.commit()
     db.refresh(activity)
