@@ -1,6 +1,6 @@
-# Prompts enviados
+## Prompts enviados
 
-## DeepSeek:PROMPT DE INICIO PARA DESARROLLO DE PRUEBA TÉCNICA - SISTEMA DE GESTIÓN DE VALOR GANADO
+### DeepSeek:PROMPT DE INICIO PARA DESARROLLO DE PRUEBA TÉCNICA - SISTEMA DE GESTIÓN DE VALOR GANADO
 
 ```
 CONTEXTO
@@ -49,7 +49,7 @@ REQUISITOS TÉCNICOS DETALLADOS
 20. Estrategia de pruebas: Especifica qué probarás primero y con qué prioridad.
 ```
 
-### Respuesta
+#### Respuesta
 
 La IA considera que en la redacción del Prompt hay problemas críticos que deben ser resueltos para la correcta planificación del proyecto. A saber:
 
@@ -149,7 +149,7 @@ RESPONDE CON LA PLANIFICACIÓN (FASE 1) EN TU PRÓXIMO MENSAJE.
 
 ```
 
-## PROMPT: GENERADOR DE SCRIPT SQL (POSTGRESQL ESTRUCTURADO)
+## Claude PROMPT GENERADOR DE SCRIPT SQL (POSTGRESQL ESTRUCTURADO)
 
 ```
 Tu tarea es generar un script SQL completo listo para ejecución que inicialice una base de datos relacional para un sistema de gestión de proyectos.
@@ -229,3 +229,37 @@ Debe ser un archivo .sql válido ejecutable directamente.
 ```
 
 El sql generado se encuentra en el backend/scripts
+
+### Claude: PROMPT DE CONSTRUCCIÓN DE SERVICIO VALOR GANADO
+
+```
+Con base en las especificaciones que hemos abordado en los casos pasados implementar un módulo de servicio en Python que calcule indicadores EVM bajo las siguientes especificaciones: 
+1. Construir componente llamado EVMCalculator que permita
+Calcular las métricas EVM por actividad
+Calcular las métricas consolidadas por proyecto
+2. Reglas
+Usar dataclases para los modelos de salida
+Sin librerías externas
+Codigo limpio
+No agregues emojis ni docstrings largos
+3. ActivityEVM debe contener
+
+Los datos base de la actividad
+activity_id activity_name bac planned_progress actual_progress actual_cost
+
+Y los indicadores
+
+pv ev cv sv cpi spi eac vac
+
+4. ProjectEVM debe contener
+
+Los datos consolidados del proyecto
+project_id project_name total_bac total_pv total_ev total_ac
+Debe incluir la lista de ActivityEVM calculadas
+El servicio debe tener dos metodos
+calculate_activity_evm()
+
+calculate_project_evm()
+```
+
+Luego de revisar la respuesta se solificó el código con ajuste de reglas de negocio, interpretaciones para CPI y SPI.
