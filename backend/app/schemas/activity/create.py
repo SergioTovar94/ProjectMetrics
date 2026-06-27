@@ -16,4 +16,4 @@ class ActivityCreate(BaseModel):
     bac: float = Field(..., gt=0, description="Budget at Completion")
     planned_progress: float = Field(..., ge=0.0, le=1.0, description="% planificado")
     actual_progress: float = Field(..., ge=0.0, le=1.0, description="% real")
-    actual_cost: float = Field(..., ge=0.0, description="Costo real")
+    ac: float = Field(..., ge=0.0, description="Costo real")

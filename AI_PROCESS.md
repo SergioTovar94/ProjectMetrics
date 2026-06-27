@@ -52,10 +52,10 @@ https://docs.google.com/spreadsheets/d/184F8tHBly0nTT289iX1E2ab7KTB1-UE2f9pNYQ5W
 
 ## Decisiones donde no seguí lo que dijo la IA
 
-### 1.
+### 1. Apartado de Routers
 
-Propuesta IA
-Camino tomado
+Propuesta IA: La IA genera el código de los CRUD de forma adecuada exceptuando en el caso de actualización, donde sugirió usar put en vez de patch. 
+Camino tomado: Se reemplaza por código orientado permitir actualización parcial del proyecto o actividad.
 
 ### 2.
 
@@ -70,4 +70,9 @@ Los datos ingresados fueron suministrados a partir de la hoja de calculo https:/
 
 Como se pudo observar en el prompt inicial. La decisión de arquitectura fue para el backend por capas (Router Service Repository) y frontend estructura de componentes Anglar (Components Services). Por escalabilidad y robustez, la arquitectura limpia o hexagonal suele ser ideal. Sin embargo, debido a los tiempos establecidos para el desarrollo se determinó que la arquitectura por capas es la que mejor se adapta a la agilidad requerida.
 
+Por otro lado, en algunas solicitudes la IA generó código que, si bien cumplía con el Principio de Responsabilidad Simple, concentraba demasiada lógica dentro de una misma clase o archivo. En estos casos, se optó por dividir el código en módulos más pequeños y especializados, mejorando la organización, la mantenibilidad y la escalabilidad de la aplicación.
+
 ## Reflexión honesta de qué cambiaría si repitiera el ejercicio
+1. Durante el desarrollo del proyecto se generaron inconsistencias entre los models, schemas y la base de datos. Considero necesario que si repitiera el ejercicio estaría más pendiente de que haya consistencia.
+2. Hubo un error en la configuración inicial del .gitignore que permitió versionar archivos __pycache__. Aunque posteriormente se corrigió el .gitignore, los archivos que ya estaban siendo rastreados por Git no fueron retirados en ese momento.
+3. Algunos commits incluyeron cambios que no estaban directamente relacionados con la funcionalidad de la feature, como ajustes de configuración del proyecto. En una nueva iteración procuraría realizar commits más atómicos y enfocados en una única responsabilidad, facilitando la revisión y el mantenimiento del historial del repositorio.

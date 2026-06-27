@@ -22,7 +22,7 @@ CREATE TABLE activities (
     bac NUMERIC(12, 2) NOT NULL,
     planned_progress NUMERIC(3, 2) DEFAULT 0.00,
     actual_progress NUMERIC(3, 2) DEFAULT 0.00,
-    actual_cost NUMERIC(12, 2) DEFAULT 0.00,
+    ac NUMERIC(12, 2) DEFAULT 0.00,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_activity_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
@@ -40,7 +40,7 @@ INSERT INTO activities (
         bac,
         planned_progress,
         actual_progress,
-        actual_cost
+        ac
     )
 VALUES (
         1,

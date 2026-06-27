@@ -11,7 +11,7 @@ class ActivityEVM:
     bac: float
     planned_progress: float
     actual_progress: float
-    actual_cost: float
+    ac: float
 
     # Indicadores calculados
     pv: float  # Planned Value
@@ -34,10 +34,10 @@ class ProjectEVM:
 
     project_id: int
     project_name: str
-    total_bac: float
-    total_pv: float
-    total_ev: float
-    total_ac: float
+    bac: float
+    pv: float
+    ev: float
+    ac: float
     cv: float
     sv: float
     cpi: float
@@ -71,16 +71,16 @@ class EVMCalculator:
 
     @staticmethod
     def _calculate_indicators(
-        bac: float, pv: float, ev: float, actual_cost: float
+        bac: float, pv: float, ev: float, ac: float
     ) -> dict[str, float]:
         """
         Calcula los indicadores derivados: CV, SV, CPI, SPI, EAC, VAC
         """
-        cv = ev - actual_cost
+        cv = ev - ac
         sv = ev - pv
 
         # CPI (con manejo de división por cero)
-        cpi = ev / actual_cost if actual_cost > 0 else 1.0
+        cpi = ev / ac if ac > 0 else 1.0
 
         # SPI (con manejo de división por cero)
         spi = ev / pv if pv > 0 else 1.0
@@ -107,21 +107,21 @@ class EVMCalculator:
         bac: float,
         planned_progress: float,
         actual_progress: float,
-        actual_cost: float,
+        ac: float,
     ) -> ActivityEVM:
         """Calcula todos los indicadores EVM para una actividad individual"""
         # Validar entradas
         bac = EVMCalculator._to_float(bac)
         planned_progress = EVMCalculator._to_float(planned_progress)
         actual_progress = EVMCalculator._to_float(actual_progress)
-        actual_cost = EVMCalculator._to_float(actual_cost)
+        ac = EVMCalculator._to_float(ac)
 
         # PV y EV (fórmulas base)
         pv = planned_progress * bac
         ev = actual_progress * bac
 
         # Indicadores derivados
-        indicators = EVMCalculator._calculate_indicators(bac, pv, ev, actual_cost)
+        indicators = EVMCalculator._calculate_indicators(bac, pv, ev, ac)
 
         return ActivityEVM(
             activity_id=activity_id,
@@ -129,7 +129,7 @@ class EVMCalculator:
             bac=round(bac, 2),
             planned_progress=planned_progress,
             actual_progress=actual_progress,
-            actual_cost=round(actual_cost, 2),
+            ac=round(ac, 2),
             pv=round(pv, 2),
             ev=round(ev, 2),
             cv=round(indicators["cv"], 2),
@@ -151,10 +151,10 @@ class EVMCalculator:
             return ProjectEVM(
                 project_id=project_id,
                 project_name=project_name,
-                total_bac=0.0,
-                total_pv=0.0,
-                total_ev=0.0,
-                total_ac=0.0,
+                bac=0.0,
+                pv=0.0,
+                ev=0.0,
+                ac=0.0,
                 cv=0.0,
                 sv=0.0,
                 cpi=1.0,
@@ -168,10 +168,10 @@ class EVMCalculator:
 
         # Calcular cada actividad y acumular
         activity_results = []
-        total_bac = 0.0
-        total_pv = 0.0
-        total_ev = 0.0
-        total_ac = 0.0
+        bac = 0.0
+        pv = 0.0
+        ev = 0.0
+        ac = 0.0
 
         for activity in activities_data:
             result = EVMCalculator.calculate_activity_evm(
@@ -184,26 +184,24 @@ class EVMCalculator:
                 actual_progress=EVMCalculator._to_float(
                     activity.get("actual_progress")
                 ),
-                actual_cost=EVMCalculator._to_float(activity.get("actual_cost")),
+                ac=EVMCalculator._to_float(activity.get("ac")),
             )
             activity_results.append(result)
-            total_bac += result.bac
-            total_pv += result.pv
-            total_ev += result.ev
-            total_ac += result.actual_cost
+            bac += result.bac
+            pv += result.pv
+            ev += result.ev
+            ac += result.ac
 
         # Calcular indicadores del proyecto (reusa la misma lógica)
-        indicators = EVMCalculator._calculate_indicators(
-            total_bac, total_pv, total_ev, total_ac
-        )
+        indicators = EVMCalculator._calculate_indicators(bac, pv, ev, ac)
 
         return ProjectEVM(
             project_id=project_id,
             project_name=project_name,
-            total_bac=round(total_bac, 2),
-            total_pv=round(total_pv, 2),
-            total_ev=round(total_ev, 2),
-            total_ac=round(total_ac, 2),
+            bac=round(bac, 2),
+            pv=round(pv, 2),
+            ev=round(ev, 2),
+            ac=round(ac, 2),
             cv=round(indicators["cv"], 2),
             sv=round(indicators["sv"], 2),
             cpi=round(indicators["cpi"], 2),
