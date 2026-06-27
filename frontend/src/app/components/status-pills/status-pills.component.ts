@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ActivityService } from '../../core/services/activity.service';
@@ -11,7 +11,7 @@ import { EVMIndicators } from '../../core/models/evm.model';
   templateUrl: './status-pills.component.html',
   styleUrls: ['./status-pills.component.css']
 })
-export class StatusPillsComponent implements OnInit, OnDestroy {
+export class StatusPillsComponent implements OnInit, OnDestroy, OnChanges  {
   @Input() projectId!: number;
 
   cpi: number | null = null;
@@ -146,5 +146,10 @@ export class StatusPillsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['projectId'] && !changes['projectId'].firstChange) {
+      this.loadData();
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ActivityService } from '../../core/services/activity.service';
@@ -30,7 +30,7 @@ Chart.register(
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.css']
 })
-export class BarChartComponent implements OnInit, OnDestroy {
+export class BarChartComponent implements OnInit, OnDestroy, OnChanges  {
   @Input() projectId!: number;
   @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -156,5 +156,10 @@ export class BarChartComponent implements OnInit, OnDestroy {
       this.chart = null;
     }
     this.subscription?.unsubscribe();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['projectId'] && !changes['projectId'].firstChange) {
+      this.loadData();
+    }
   }
 }

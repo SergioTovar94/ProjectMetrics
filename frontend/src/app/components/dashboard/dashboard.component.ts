@@ -11,6 +11,7 @@ import { KpiCardsComponent } from '../kpi-cards/kpi-cards.component';
 import { BarChartComponent } from '../bar-chart/bar-chart.component';
 import { ActivityTableComponent } from '../activity-table/activity-table.component';
 import { ActivityFormComponent } from '../activity-form/activity-form.component';
+import { ProjectFormComponent } from '../project-form/project-form.component';
 
 
 @Component({
@@ -107,6 +108,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  openProjectForm(): void {
+  const dialogRef = this.dialog.open(ProjectFormComponent, {
+    width: '500px'
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result) {
+      this.loadProjects();  // Recargar la lista de proyectos
+    }
+  });
+}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());

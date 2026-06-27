@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +14,7 @@ import { ActivityFormComponent } from '../activity-form/activity-form.component'
   templateUrl: './activity-table.component.html',
   styleUrls: ['./activity-table.component.css']
 })
-export class ActivityTableComponent implements OnInit, OnDestroy {
+export class ActivityTableComponent implements OnInit, OnDestroy, OnChanges {
   @Input() projectId!: number;
   @Output() dataChanged = new EventEmitter<void>();
 
@@ -136,5 +136,10 @@ export class ActivityTableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['projectId'] && !changes['projectId'].firstChange) {
+      this.loadData();
+    }
   }
 }
