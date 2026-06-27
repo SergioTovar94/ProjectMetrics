@@ -2,4 +2,44 @@
 # Python
 # ===========================
 backend/.venv/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/.mypy_cache/
+backend/.coverage
 
+# ===========================
+# React / Node
+# ===========================
+
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+frontend/out-tsc/
+frontend/tmp/
+
+npm-debug.log*
+yarn-error.log*
+
+
+# ===========================
+# IDEs
+# ===========================
+
+.vscode/
+.idea/
+.project
+.classpath
+.settings/
+*.launch
+*.sublime-workspace
+
+# ===========================
+# Misc
+# ===========================
+
+.sass-cache/
+.history/
+.DS_Store
+Thumbs.db
