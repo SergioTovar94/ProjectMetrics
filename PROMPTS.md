@@ -230,7 +230,7 @@ Debe ser un archivo .sql válido ejecutable directamente.
 
 El sql generado se encuentra en el backend/scripts
 
-### Claude: PROMPT DE CONSTRUCCIÓN DE SERVICIO VALOR GANADO
+## Claude: PROMPT DE CONSTRUCCIÓN DE SERVICIO VALOR GANADO
 
 ```
 Con base en las especificaciones que hemos abordado en los casos pasados implementar un módulo de servicio en Python que calcule indicadores EVM bajo las siguientes especificaciones: 
@@ -263,3 +263,26 @@ calculate_project_evm()
 ```
 
 Luego de revisar la respuesta se solificó el código con ajuste de reglas de negocio, interpretaciones para CPI y SPI.
+
+## Claude: PROMPT DE CONSTRUCCIÓN DE DTOS
+Por agilidad en la generación de los schemas se le dió instrucción a Claude con los siguientes criterios
+```
+Pasemos a los schemas de pydantic. Separardos por responsabilidad en lugar de tener todo en un solo archivo.
+
+Una carpeta schemas con:
+- common para los indicadores EVM que son los mismos para actividad y proyecto
+- activity y project son carpetas separadas pero ambas tienen create, update, response y simple
+
+- Los create para cuando el cliente envía datos (POST)
+- update para cuando actualiza con PATCH, todos opcionales
+- response para devolver datos completos con EVM calculado
+- project tiene también simple para efectos de un selector que solo necesita nombre
+
+Para ActivityCreate necesito: project_id, name, bac, planned_progress, actual_progress, actual_cost (todos obligatorios)
+ActivityResponse: todo + EVM
+
+Para ProjectCreate: name y description
+ProjectUpdate: ambos opcionales
+ProjectResponse: con actividades + EVM consolidado
+ProjectSimpleResponse: solo nombre
+```

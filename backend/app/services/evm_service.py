@@ -1,4 +1,3 @@
-# backend/app/services/evm_service.py
 from dataclasses import dataclass
 from typing import Any
 
