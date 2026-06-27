@@ -1,0 +1,17 @@
+<div class="status-banner" *ngIf="!loading; else loadingState">
+    <div class="status-pill" [ngClass]="getPillClass(cpiStatus)">
+        <span class="pill-icon">{{ getCPIEmoji() }}</span>
+        {{ getCPIStatusText() }}
+    </div>
+
+    <div class="status-pill" [ngClass]="getPillClass(spiStatus)">
+        <span class="pill-icon">{{ getSPIEmoji() }}</span>
+        {{ getSPIStatusText() }}
+    </div>
+</div>
+
+<ng-template #loadingState>
+    <div class="status-banner">
+        <div class="status-pill pill-neutral">⏳ Cargando indicadores...</div>
+    </div>
+</ng-template>

@@ -1,0 +1,65 @@
+<!-- src/app/components/dashboard/dashboard.component.html -->
+<div class="dash">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div>
+            <div class="project-label">Proyecto activo</div>
+            <h1>{{ activeProject?.name || 'Selecciona un proyecto' }}</h1>
+        </div>
+        <div class="top-bar-actions">
+            <!-- Project Selector -->
+            <select *ngIf="projects.length > 0" class="project-selector"
+                (change)="onProjectSelected(projects[+$any($event.target).value])">
+                <option *ngFor="let project of projects; let i = index" [value]="i">
+                    {{ project.name }}
+                </option>
+            </select>
+
+            <button class="btn-primary" (click)="openActivityForm()">
+                + Nueva actividad
+            </button>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-banner">
+        ⚠️ {{ error }}
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando datos...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <ng-container *ngIf="!loading && !error && activeProject">
+        <!-- ✅ Status Pills (solo una vez) -->
+        <app-status-pills [projectId]="activeProject.id"></app-status-pills>
+
+        <!-- ✅ KPI Cards (solo una vez) -->
+        <app-kpi-cards [projectId]="activeProject.id"></app-kpi-cards>
+
+        <!-- Bar Chart (próximamente) -->
+        <div class="section-title">PV vs EV vs AC por actividad</div>
+        <div class="chart-placeholder">
+            <p style="color: #6b7280; text-align: center; padding: 2rem;">
+                📊 Gráfica de barras (próximamente)
+            </p>
+        </div>
+
+        <!-- Activity Table (próximamente) -->
+        <div class="section-title">Detalle de actividades</div>
+        <div class="table-placeholder">
+            <p style="color: #6b7280; text-align: center; padding: 1rem;">
+                📋 Tabla de actividades (próximamente)
+            </p>
+        </div>
+    </ng-container>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && projects.length === 0" class="empty-state">
+        <p>No hay proyectos creados. Crea uno para comenzar.</p>
+        <button class="btn-primary" style="margin-top: 1rem;">+ Crear proyecto</button>
+    </div>
+</div>
