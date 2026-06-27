@@ -47,7 +47,7 @@
         <!-- Activity Table (próximamente) -->
         <div class="section-title">Detalle de actividades</div>
         <div class="section-title">Detalle de actividades</div>
-        <app-activity-table [projectId]="activeProject.id"></app-activity-table>
+        <app-activity-table [projectId]="activeProject.id" (dataChanged)="loadProjects()"></app-activity-table>
     </ng-container>
 
     <!-- Empty State -->

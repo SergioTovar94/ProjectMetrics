@@ -19,7 +19,7 @@ export interface ActivityCreate {
   bac: number;
   planned_progress: number;
   actual_progress: number;
-  actual_cost: number;
+  ac: number;
 }
 
 export interface ActivityUpdate {
@@ -27,5 +27,5 @@ export interface ActivityUpdate {
   bac?: number;
   planned_progress?: number;
   actual_progress?: number;
-  actual_cost?: number;
+  ac?: number;
 }

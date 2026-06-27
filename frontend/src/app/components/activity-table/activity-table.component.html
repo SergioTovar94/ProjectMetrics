@@ -49,8 +49,11 @@
                         </span>
                     </td>
                     <td>
-                        <button class="btn-edit" title="Editar actividad">
+                        <button class="btn-icon" (click)="editActivity(activity)" title="Editar">
                             ✏️
+                        </button>
+                        <button class="btn-icon" (click)="deleteActivity(activity)" title="Eliminar">
+                            🗑️
                         </button>
                     </td>
                 </tr>

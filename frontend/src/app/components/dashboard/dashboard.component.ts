@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';  
 
 import { ProjectSimple } from '../../core/models/project.model';
 import { StateService } from '../../core/services/state.service';
@@ -9,6 +10,7 @@ import { StatusPillsComponent } from '../status-pills/status-pills.component';
 import { KpiCardsComponent } from '../kpi-cards/kpi-cards.component';
 import { BarChartComponent } from '../bar-chart/bar-chart.component';
 import { ActivityTableComponent } from '../activity-table/activity-table.component';
+import { ActivityFormComponent } from '../activity-form/activity-form.component';
 
 
 @Component({
@@ -20,6 +22,7 @@ import { ActivityTableComponent } from '../activity-table/activity-table.compone
     KpiCardsComponent,
     BarChartComponent,
     ActivityTableComponent,
+    MatDialogModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
@@ -33,7 +36,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private stateService: StateService,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private dialog: MatDialog 
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +87,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   openActivityForm(): void {
-    console.log('Abrir formulario de actividad');
+    const dialogRef = this.dialog.open(ActivityFormComponent, {
+      width: '500px',
+      data: {
+        activity: null,
+        projectId: this.activeProject?.id,
+        projects: this.projects
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Recargar datos después de crear/editar
+        this.loadProjects();
+        // También recargar el proyecto activo
+        if (this.activeProject) {
+          this.stateService.setActiveProject(this.activeProject);
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
