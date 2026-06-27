@@ -7,6 +7,7 @@ backend/.pytest_cache/
 backend/.ruff_cache/
 backend/.mypy_cache/
 backend/.coverage
+backend/.env
 
 # ===========================
 # React / Node
